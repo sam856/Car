@@ -37,7 +37,8 @@ namespace Cars
                .AddEntityFrameworkStores<AppDbContext>()
                .AddDefaultTokenProviders();
             builder.Services.AddScoped<IEmailService, EmailServices>();
-           builder.Services.AddScoped<IProducts, Products>();
+           builder.Services.AddScoped<IProducts, ProductsService>();
+            builder.Services.AddSignalR();
 
             builder.Services.Configure<Emailsettings>(builder.Configuration.GetSection("Emailsettings"));
 
@@ -81,6 +82,7 @@ namespace Cars
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseRouting(); // Add UseRouting here
 
             app.UseHttpsRedirection();
 
@@ -90,6 +92,11 @@ namespace Cars
             app.UseCors("MyPolicy");
             app.MapControllers();
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<NotificationHub>("/notificationHub");
+                endpoints.MapControllers();
+            });
             app.Run();
         }
     }

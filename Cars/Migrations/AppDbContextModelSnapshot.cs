@@ -120,6 +120,30 @@ namespace Cars.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("Cars.Models.FavouriteCar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavouriteCar");
+                });
+
             modelBuilder.Entity("Cars.Models.Images", b =>
                 {
                     b.Property<int>("Id")
@@ -152,6 +176,29 @@ namespace Cars.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Cars.Models.NotificationModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Cars.Models.Products", b =>
@@ -361,6 +408,25 @@ namespace Cars.Migrations
                     b.Navigation("applicationUser");
                 });
 
+            modelBuilder.Entity("Cars.Models.FavouriteCar", b =>
+                {
+                    b.HasOne("Cars.Models.Products", "Products")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cars.Authentication.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Products");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Cars.Models.Images", b =>
                 {
                     b.HasOne("Cars.Models.Products", "Products")
@@ -370,6 +436,17 @@ namespace Cars.Migrations
                         .IsRequired();
 
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Cars.Models.NotificationModel", b =>
+                {
+                    b.HasOne("Cars.Authentication.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Cars.Models.Products", b =>

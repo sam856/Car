@@ -14,6 +14,10 @@ namespace Cars.NewFolder
         public DbSet<Products> products { get; set; }
         public DbSet<Images> Images { get; set; }
 
+        public DbSet<FavouriteCar> FavouriteCar { get; set; }
+        public DbSet<NotificationModel> Notifications { get; set; }
+
+
 
 
 
